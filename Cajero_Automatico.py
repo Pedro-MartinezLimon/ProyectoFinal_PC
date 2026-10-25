@@ -21,13 +21,13 @@ def Usuarios_Retiro(usuario_indice, usuarios, efectivo_disponible):
 
         cantidad_retiro = float(input("\nIngrese la cantidad a retirar \n\n>> "))
 
-        if(0 < cantidad_retiro and cantidad_retiro <= efectivo_disponible):
+        if(1 < cantidad_retiro and cantidad_retiro <= efectivo_disponible and cantidad_retiro <= float(usuarios["usuarios"][usuario_indice]["saldo"])):
             usuarios["usuarios"][usuario_indice]["saldo"] -= cantidad_retiro
             print("Retiro exitoso!")
 
             return cantidad_retiro
         else:
-            print("Cantidad invalida! Debe ser entre $0 y $", efectivo_disponible)
+            print("Cantidad invalida! Debe ser entre $1 y su saldo")
             contador += 1
         
     print("Usted ha superado el limite de intentos")
@@ -64,8 +64,9 @@ def Usuarios_Transferencia(usuario_indice, usuarios):
         print("Saldo disponible: $", usuarios["usuarios"][usuario_indice]["saldo"])
 
         usuario_transferencia = input("Ingrese la cuenta destino\n\n>> ")
+        usuario_transferencia_id = Cajero_Existe(usuario_transferencia, usuarios)
 
-        if(Cajero_Existe(usuario_transferencia, usuarios) != -1):
+        if(usuario_transferencia_id != -1 and usuario_transferencia != usuario_indice):
             contador = 1
 
             while(contador != 3):
@@ -74,11 +75,11 @@ def Usuarios_Transferencia(usuario_indice, usuarios):
                 if(cantidad_transferencia > 0 and cantidad_transferencia <= float(usuarios["usuarios"][usuario_indice]["saldo"])):
                     
                     usuarios["usuarios"][usuario_indice]["saldo"] -= cantidad_transferencia
-                    usuarios["usuarios"][usuario_transferencia]["saldo"] += cantidad_transferencia
+                    usuarios["usuarios"][usuario_transferencia_id]["saldo"] += cantidad_transferencia
 
                     print("Transferencia exitosa!")
-                    print("El/la señor/a: ", usuarios["usuario"][usuario_indice]["nombre"])
-                    print("Ha transferido $", str(cantidad_transferencia), "al usuario: ", usuarios["usuario"][usuario_transferencia]["nombre"])
+                    print("El/la señor/a: ", usuarios["usuarios"][usuario_indice]["nombre"])
+                    print("Ha transferido $", str(cantidad_transferencia), "al usuario: ", usuarios["usuari"][usuario_transferencia_id]["nombre"])
 
                     return 0
                 else:
@@ -88,8 +89,8 @@ def Usuarios_Transferencia(usuario_indice, usuarios):
             print("Numero de cuenta invalido.")
             contador += 1
 
-        print("Usted ha superado el limite de intentos!")
-        return -1
+    print("Usted ha superado el limite de intentos!")
+    return -1
                     
 def Usuarios_NuevoNIP(usuario_indice, usuarios):
     contador = 1
@@ -133,12 +134,14 @@ if __name__ == "__main__":
     print("======================= Cajero Automatico =======================")
     sesion_tarjeta = input("Ingrese el numero de tarjeta\n\n>> ")
     sesion_identificador = Cajero_Existe(sesion_tarjeta, usuarios)
+    sesion_nip = input("Nip\n\n>> ")
 
-    while(sesion_identificador == -1):
+    while(sesion_identificador == -1 and sesion_nip == usuarios["usuarios"][sesion_identificador]["nip"]):
         print("Numero de tarjeta invalido")
 
         sesion_tarjeta = input("Ingrese el numero de tarjeta\n\n>> ")
         sesion_identificador = Cajero_Existe(sesion_tarjeta, usuarios)
+        sesion_nip = input("Nip\n\n>> ")
 
 
     while(sesion_operacion != 6):

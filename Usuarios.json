@@ -3,13 +3,13 @@
         {
             "numero_tarjeta": "12345678",
             "nip": "4142",
-            "saldo": 800.0,
+            "saldo": 1000.0,
             "nombre": "Marisol Dominguez"
         },
         {
             "numero_tarjeta": "87654321",
-            "nip": "7772",
-            "saldo": 320,
+            "nip": "0114",
+            "saldo": 1100.0,
             "nombre": "John Pork"
         },
         {
