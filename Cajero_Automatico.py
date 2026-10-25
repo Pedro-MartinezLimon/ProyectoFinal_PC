@@ -166,6 +166,7 @@ if __name__ == "__main__":
             print("Muchas gracias por su preferencia")
 
         print("--- click para continuar ---")
+        input()
 
     with open("Usuarios.json", "w") as base_usuarios:
         json.dump(usuarios, base_usuarios, indent=4)
