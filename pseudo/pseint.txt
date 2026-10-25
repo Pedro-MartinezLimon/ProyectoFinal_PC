@@ -1,0 +1,241 @@
+// =========================================================
+// SUBPROCESOS (FUNCIONES)
+// =========================================================
+
+SubProceso id <- Cajero_Existe(usuario_tarjeta, numero_tarjeta Por Referencia, total_usuarios)
+    Definir id, i Como Entero
+    id <- -1
+    Para i <- 1 Hasta total_usuarios Hacer
+        Si usuario_tarjeta = numero_tarjeta[i] Entonces
+            id <- i
+        FinSi
+    FinPara
+FinSubProceso
+
+SubProceso Cajero_Datos(usuario_indice, nombre Por Referencia, saldo Por Referencia)
+    Escribir "Usuario/a: ", nombre[usuario_indice]
+    Escribir "Saldo disponible: $", saldo[usuario_indice]
+FinSubProceso
+
+SubProceso cantidad_retiro <- Usuarios_Retiro(usuario_indice, nombre Por Referencia, saldo Por Referencia, efectivo_disponible)
+    Definir contador Como Entero
+    Definir cantidad_retiro Como Real
+    contador <- 1
+    
+    Mientras contador < 3 Hacer
+        Escribir "Usuario/a: ", nombre[usuario_indice]
+        Escribir "Saldo disponible: $", saldo[usuario_indice]
+        Escribir "Ingrese la cantidad a retirar:"
+        Leer cantidad_retiro
+        
+        Si cantidad_retiro >= 1 Y cantidad_retiro <= efectivo_disponible Y cantidad_retiro <= saldo[usuario_indice] Entonces
+            saldo[usuario_indice] <- saldo[usuario_indice] - cantidad_retiro
+            Escribir "¡Retiro exitoso!"
+            contador <- 3 // Para salir del bucle
+        Sino
+            Escribir "¡Cantidad inválida! Debe ser entre $1 y su saldo disponible."
+            contador <- contador + 1
+            cantidad_retiro <- 0
+        FinSi
+    FinMientras
+    
+    Si contador = 3 Y cantidad_retiro = 0 Entonces
+        Escribir "Usted ha superado el límite de intentos."
+    FinSi
+FinSubProceso
+
+SubProceso Usuarios_Depositos(usuario_indice, nombre Por Referencia, saldo Por Referencia)
+    Definir contador Como Entero
+    Definir cantidad_deposito Como Real
+    contador <- 1
+    
+    Mientras contador < 3 Hacer
+        Escribir "Usuario/a: ", nombre[usuario_indice]
+        Escribir "Saldo disponible: $", saldo[usuario_indice]
+        Escribir "Ingrese la cantidad a depositar:"
+        Leer cantidad_deposito
+        
+        Si cantidad_deposito > 0 Y cantidad_deposito < 10000 Entonces
+            saldo[usuario_indice] <- saldo[usuario_indice] + cantidad_deposito
+            Escribir "¡Depósito exitoso!"
+            contador <- 3
+        Sino
+            Escribir "La cantidad debe estar entre $0 y $10,000."
+            contador <- contador + 1
+        FinSi
+    FinMientras
+    
+    Si contador = 3 Y (cantidad_deposito <= 0 O cantidad_deposito >= 10000) Entonces
+        Escribir "Usted ha superado el límite de intentos."
+    FinSi
+FinSubProceso
+
+SubProceso Usuarios_Transferencia(usuario_indice, nombre Por Referencia, saldo Por Referencia, numero_tarjeta Por Referencia, total_usuarios)
+    Definir contador, contador_monto, usuario_transferencia_id Como Entero
+    Definir usuario_transferencia Como Cadena
+    Definir cantidad_transferencia Como Real
+    
+    contador <- 1
+    Mientras contador < 3 Hacer
+        Escribir "Usuario/a: ", nombre[usuario_indice]
+        Escribir "Saldo disponible: $", saldo[usuario_indice]
+        Escribir "Ingrese la cuenta destino:"
+        Leer usuario_transferencia
+        
+        usuario_transferencia_id <- Cajero_Existe(usuario_transferencia, numero_tarjeta, total_usuarios)
+        
+        Si usuario_transferencia_id <> -1 Y usuario_transferencia_id <> usuario_indice Entonces
+            contador_monto <- 1
+            Mientras contador_monto < 3 Hacer
+                Escribir "Ingrese la cantidad a transferir:"
+                Leer cantidad_transferencia
+                
+                Si cantidad_transferencia > 0 Y cantidad_transferencia <= saldo[usuario_indice] Entonces
+                    saldo[usuario_indice] <- saldo[usuario_indice] - cantidad_transferencia
+                    saldo[usuario_transferencia_id] <- saldo[usuario_transferencia_id] + cantidad_transferencia
+                    
+                    Escribir "¡Transferencia exitosa!"
+                    Escribir "El/la señor/a: ", nombre[usuario_indice]
+                    Escribir "Ha transferido $", cantidad_transferencia, " al usuario: ", nombre[usuario_transferencia_id]
+                    
+                    contador_monto <- 3
+                    contador <- 3
+                Sino
+                    Escribir "La cantidad es menor o igual a 0 o supera su saldo actual."
+                    contador_monto <- contador_monto + 1
+                FinSi
+            FinMientras
+        Sino
+            Escribir "Número de cuenta inválido o intentó transferirse a sí mismo."
+            contador <- contador + 1
+        FinSi
+    FinMientras
+    
+    Si contador = 3 Y usuario_transferencia_id = -1 Entonces
+        Escribir "Usted ha superado el límite de intentos."
+    FinSi
+FinSubProceso
+
+SubProceso Usuarios_NuevoNIP(usuario_indice, nip Por Referencia)
+    Definir contador, contador_nuevo Como Entero
+    Definir usuario_nip, nuevo_nip Como Cadena
+    
+    contador <- 1
+    Mientras contador < 3 Hacer
+        Escribir "Ingrese su NIP actual:"
+        Leer usuario_nip
+        
+        Si usuario_nip = nip[usuario_indice] Entonces
+            contador_nuevo <- 1
+            Mientras contador_nuevo < 3 Hacer
+                Escribir "Ingrese el nuevo NIP (4 dígitos):"
+                Leer nuevo_nip
+                
+                Si Longitud(nuevo_nip) = 4 Entonces
+                    nip[usuario_indice] <- nuevo_nip
+                    Escribir "El NIP ha sido cambiado exitosamente."
+                    contador_nuevo <- 3
+                    contador <- 3
+                Sino
+                    Escribir "El nuevo NIP debe ser de cuatro caracteres [XXXX]."
+                    contador_nuevo <- contador_nuevo + 1
+                FinSi
+            FinMientras
+        Sino
+            Escribir "NIP incorrecto."
+            contador <- contador + 1
+        FinSi
+    FinMientras
+    
+    Si contador = 3 Y usuario_nip <> nip[usuario_indice] Entonces
+        Escribir "Usted superó el límite de intentos."
+    FinSi
+FinSubProceso
+
+// =========================================================
+// ALGORITMO PRINCIPAL
+// =========================================================
+Algoritmo CajeroAutomatico
+    Definir TOTAL_USUARIOS Como Entero
+    TOTAL_USUARIOS <- 4
+    
+    // Declaración de arreglos (Simulación de la BD Usuarios.json)
+    Dimension numero_tarjeta[TOTAL_USUARIOS]
+    Dimension nip[TOTAL_USUARIOS]
+    Dimension saldo[TOTAL_USUARIOS]
+    Dimension nombre[TOTAL_USUARIOS]
+    
+    // Inicialización de datos
+    numero_tarjeta[1] <- "12345678"; nip[1] <- "6776"; saldo[1] <- 1000.0; nombre[1] <- "Marisol Dominguez"
+    numero_tarjeta[2] <- "87654321"; nip[2] <- "0114"; saldo[2] <- 1100.0; nombre[2] <- "John Pork"
+    numero_tarjeta[3] <- "12348765"; nip[3] <- "0912"; saldo[3] <- 700.0;  nombre[3] <- "Andres Obrador"
+    numero_tarjeta[4] <- "56784312"; nip[4] <- "4312"; saldo[4] <- 300.0;  nombre[4] <- "Karla Panini"
+    
+    // Variables de sesión
+    Definir sesion_operacion, sesion_identificador Como Entero
+    Definir sesion_efectivo, monto_retirado Como Real
+    Definir sesion_tarjeta, sesion_nip, tecla Como Cadena
+    Definir acceso_concedido Como Logico
+    
+    sesion_operacion <- 0
+    sesion_efectivo <- 200000
+    acceso_concedido <- Falso
+    
+    Escribir "======================= Cajero Automático ======================="
+    
+    // Bucle de validación de credenciales
+    Mientras NO acceso_concedido Hacer
+        Escribir "Ingrese el número de tarjeta:"
+        Leer sesion_tarjeta
+        
+        sesion_identificador <- Cajero_Existe(sesion_tarjeta, numero_tarjeta, TOTAL_USUARIOS)
+        
+        Escribir "Ingrese su NIP:"
+        Leer sesion_nip
+        
+        Si sesion_identificador <> -1 Y nip[sesion_identificador] = sesion_nip Entonces
+            acceso_concedido <- Verdadero
+        Sino
+            Escribir "Número de tarjeta o NIP inválidos. Intente de nuevo.\n"
+        FinSi
+    FinMientras
+    
+    // Menú principal de operaciones
+    Mientras sesion_operacion <> 6 Hacer
+        Escribir "======================= Seleccione ======================="
+        Escribir "Número de tarjeta: ", numero_tarjeta[sesion_identificador]
+        Escribir "Usuario: ", nombre[sesion_identificador]
+        Escribir ""
+        Escribir "1. Consultar Saldo"
+        Escribir "2. Retiro de efectivo"
+        Escribir "3. Depósito"
+        Escribir "4. Transferencia"
+        Escribir "5. Cambio de NIP"
+        Escribir "6. Cerrar sesión"
+        Leer sesion_operacion
+        
+        Según sesion_operacion Hacer
+            1:
+                Cajero_Datos(sesion_identificador, nombre, saldo)
+            2:
+                monto_retirado <- Usuarios_Retiro(sesion_identificador, nombre, saldo, sesion_efectivo)
+                sesion_efectivo <- sesion_efectivo - monto_retirado
+            3:
+                Usuarios_Depositos(sesion_identificador, nombre, saldo)
+            4:
+                Usuarios_Transferencia(sesion_identificador, nombre, saldo, numero_tarjeta, TOTAL_USUARIOS)
+            5:
+                Usuarios_NuevoNIP(sesion_identificador, nip)
+            6:
+                Escribir "Muchas gracias por su preferencia."
+            De Otro Modo:
+                Escribir "Opción inválida."
+        FinSegún
+        
+        Si sesion_operacion <> 6 Entonces
+            Escribir "--- Presione Enter para continuar ---"
+            Leer tecla
+        FinSi
+    FinMientras
+
+FinAlgoritmo
