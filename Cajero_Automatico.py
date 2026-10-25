@@ -23,6 +23,8 @@ def Usuarios_Retiro(usuario_indice, usuarios, efectivo_disponible):
 
         if(0 < cantidad_retiro and cantidad_retiro <= efectivo_disponible):
             usuarios["usuarios"][usuario_indice]["saldo"] -= cantidad_retiro
+            print("Retiro exitoso!")
+
             return cantidad_retiro
         else:
             print("Cantidad invalida! Debe ser entre $0 y $", efectivo_disponible)
@@ -43,6 +45,8 @@ def Usuarios_Depositos(usuario_indice, usuarios):
 
         if(0 < cantidad_deposito and cantidad_deposito < 10000):
             usuarios["usuarios"][usuario_indice]["saldo"] += cantidad_deposito
+            print("Deposito exitoso!")
+
             return cantidad_deposito
         else:
             print("La cantidad debe estar entre $0 y $10,000")
