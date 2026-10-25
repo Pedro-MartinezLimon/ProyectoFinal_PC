@@ -1,0 +1,28 @@
+{
+    "usuarios": [
+        {
+            "numero_tarjeta": "12345678",
+            "nip": "4142",
+            "saldo": 900.0,
+            "nombre": "Marisol Dominguez"
+        },
+        {
+            "numero_tarjeta": "87654321",
+            "nip": "7772",
+            "saldo": 320,
+            "nombre": "John Pork"
+        },
+        {
+            "numero_tarjeta": "12348765",
+            "nip": "0912",
+            "saldo": 700,
+            "nombre": "Andres Obrador"
+        },
+        {
+            "numero_tarjeta": "56784312",
+            "nip": "4312",
+            "saldo": 300,
+            "nombre": "Karla Panini"
+        }
+    ]
+}
